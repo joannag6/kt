@@ -22,14 +22,14 @@
 
 \section{Introduction}
 
-This report examines a diverse set of spelling correction techniques and compares their respective performances on a particular dataset from UrbanDictionary % \cite{JOURNAL:1}.
+This report examines a diverse set of spelling correction techniques and compares their respective performances on a particular dataset from UrbanDictionary. % \cite{JOURNAL:1}.
+Regardless of whether the spelling mistakes were due to legitimate spelling variations or a simple typo, spelling correction can be treated as an approximate string matching problem. % cite Hall and Dowling
+%Approximate string matching is a common problem with various real world applications. 
 
-Explain that this is an approximate string matching problem. -- maybe put this in methodology?
+%- include stats of misspelled words in general 
+%- include history of spell checkers / spelling correction 
 
-- include stats of misspelled words in general 
-- include history of spell checkers / spelling correction 
-
-aims to apply multiple spelling correction methods on a given data set. The methods are then analysed and compared based on their respective performances.
+%aims to apply multiple spelling correction methods on a given data set. The methods are then analysed and compared based on their respective performances.
 
 \section{Dataset}
 The data provided consisted of misspelled words, the correct spellings of the respective words, and a "dictionary" of correctly spelt words. These were identified from UrbanDictionary by Saphra and Lopez (2016). The words were constructed from Latin characters but were not necessarily English words. This dataset has several deficiencies, which could produce false negatives or false positives in the results. For example, "guilford" (a "correct" entry) doesn't appear in dictionary but "guildford" (a "misspelled" entry) does. The following table illustrates these shortcomings:
@@ -42,8 +42,7 @@ The data provided consisted of misspelled words, the correct spellings of the re
 \hline
 misspelled entries in dictionary & \textit{171}  \\ 
 correct entries \textbf{not} in dictionary & \textit{108} \\ 
-correct entries same as misspelled entries & \textit{9} \\
-correct entries same as misspelled entries & \textit{9} \\
+correct entries same as misspelled ones & \textit{9} \\
 \hline
 
 \end{tabular}
@@ -51,7 +50,7 @@ correct entries same as misspelled entries & \textit{9} \\
  \end{center}
 \end{table}
 
-Further calculation disclosed that 275 (out of 716) words are in some way "deficient". This is close to 38.4\% of the data. Since this is such a high number, some precaution should be taken before making any critical conclusions from this study.
+Further calculation revealed that 275 (out of 716) words are in some way "deficient". This is close to 38.4\% of the data. Since this is such a high number, some precaution should be taken before making any critical conclusions from this study.
 
 %"a number of headwords taken from UrbanDictionary that have been automatically identified as being misspelled (Saphra and Lopez, 2016)."
 %all the words are "english" and are latin characters. however they are not necessarily English which is why we use the provided dictionary  as reference.
@@ -62,7 +61,7 @@ Further calculation disclosed that 275 (out of 716) words are in some way "defic
 % use terms "False positive" and "False negative"
 
 \section{Methodology}
-Three different approaches were chosen to attempt to solve the problem. This was done in order to get a broader scope of results and to attempt to incorporate the advantages from each technique into a singular better solution for this problem. /@@@@@/
+Three different approaches for approximate string matching were chosen to attempt to solve the problem. This was done in order to get a broader scope of results and to attempt to incorporate the advantages from each technique into a singular better solution for this problem. % reword
 
 
 
