@@ -1,0 +1,206 @@
+\documentclass[11pt]{article}
+\usepackage{colacl}
+\sloppy
+
+
+
+\title{COMP90049 Report}
+\author
+{Anonymous}
+
+
+\bibliographystyle{acl}
+\bibliography{sample}
+
+\begin{document}
+\maketitle
+
+
+%\begin{abstract}
+%This is a \LaTeX\ sample for your paper.
+%\end{abstract}
+
+\section{Introduction}
+
+This report examines a diverse set of spelling correction techniques and compares their respective performances on a particular dataset from UrbanDictionary \cite{JOURNAL:1}.
+
+- include stats of misspelled words in general 
+- include history of spell checkers / spelling correction 
+
+
+/@@@@@@@@@@@@@@@@@/ -- reword this
+Here, a list of words entries that are ?correct?We can break our input into words substrings that we wish to match, and compare each of them against the entries in the dictionaryA word item in the input which doesn?t appear in the dictionary is misspelledA word item in the input which does appear in the dictionary might be correctly spelled or misspelled (probably slightly beyond the scope of this subject)
+/@@@@@@@@@@@@@@@@@/
+
+aims to apply multiple spelling correction methods on a given data set. The methods are then analysed and compared based on their respective performances.
+
+\section{Dataset}
+
+"a number of headwords taken from UrbanDictionary that have been automatically identified as being misspelled (Saphra and Lopez, 2016)."
+
+all the words are "english" and are latin characters. however they are not necessarily English which is why we use the provided dictionary  as reference.
+
+explain where the data set is from. explain how it is not "clean". give some numbers related to this.
+number of misspelled entries that do appear in the dictionary: 171
+number of correct entries that don?t appear in the dictionary: 108
+- eg. "guilford" (from correct.txt) doesn't appear in dictionary but "guildford" (from misspell.txt) does.
+number of correct spellings are the same as the misspelling': 9
+number of deficient data in dataset: 275 (out of 716) -- 38.4\% of data is ?dirty?.
+
+
+
+\section{Methodology}
+Three different approaches were chosen to attempt to solve the problem. /@@@@@/I
+
+\subsection{Global Edit Distance}
+The Needleman-Wunsch Algorithm !!@CITE@!! was used to calculate the Global Edit Distance (GED) between the misspelled word and a word in the given dictionary. This dynamic-programming algorithm was chosen in order to improve the run time complexity of the otherwise lengthy process. It returns the maximum possible "score" which represents the GED between the two words. This score is determined by the chosen parameters. 
+
+A simple \texttt{Python} script was used to execute the algorithm, calculating the GED between each word in the given file of misspelled words and each word in the dictionary, returning a list of dictionary words with the largest GED from each respective misspelled word.
+
+\subsubsection{Parameters}
+After consideration, the Levenshtein distance !!@CITE@!! with parameters of \((m, i, d, r) = (+1, -1, -1, -1)\) was chosen to be applied in this implementation. With this parameters, strings which are more "similar" have a higher GED score. /// why?
+
+\subsubsection{Comparison with Local Edit Distance}
+Local Edit Distance (LED) is a ... used for  more appropriate for substring matching, but due to the nature of this problem, it will not be very effective in getting good solutions.
+
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+
+
+
+\subsection{Neighbourhood Search}
+This search algorithm was implemented with a \texttt{bash} script which utilised the UNIX command-line utility \texttt{agrep} !!@@CITE @@!! due to its impressive efficiency. The code used the \texttt{-\#} flag in the \texttt{agrep} command in order to define the neighbourhood limit, \texttt{k}. \texttt{agrep} was executed on each misspelled word with \texttt{k}-values starting from \texttt{0} and incremented by \texttt{1}, until at least one match from the dictionary (a neighbour) was found.
+
+All the matches for that specific misspelled word were then outputted to standard output. This allowed for each misspelled entry to have at least one result without requiring preprocessing to determine the smallest value of \texttt{k} needed to guarantee a match.
+
+
+
+\subsection{Soundex}
+
+
+
+\subsubsection{Implementation}
+
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Three main methods chosen,\footnote{Footnote text} with footnotes at bottom of page.
+Text of the subsection with citations such as 
+\newcite{Spa72}, \newcite{Kay86} and \newcite{MosWal64}.
+Note that the citation style is defined in the accompanying
+style file; it is similar to AAAI house style. You may use
+other (formal) citation styles if you prefer.
+Text of the subsubsection.
+Text of the subsubsection (see Table~\ref{table1}).
+
+
+
+\section{Evaluation Methods}
+
+\subsection{Precision}
+
+- explain what it is and what it's good for (with some references)
+
+Text,\footnote{Footnote text} with footnotes at bottom of page.
+Text of the subsection with citations such as 
+\newcite{Spa72}, \newcite{Kay86} and \newcite{MosWal64}.
+Note that the citation style is defined in the accompanying
+style file; it is similar to AAAI house style. You may use
+other (formal) citation styles if you prefer.
+
+
+\subsection{Recall}
+
+- explain what it is and what it's good for (with some references)
+
+Text of the subsection with citations such as 
+\newcite{Spa72}, \newcite{Kay86} and \newcite{MosWal64}.
+Note that the citation style is defined in the accompanying
+style file; it is similar to AAAI house style. You may use
+other (formal) citation styles if you prefer.
+
+
+\subsection{Results}
+
+Text of the subsection with citations such as 
+\begin{table}[h]
+ \begin{center}
+\begin{tabular}{|l|l|}
+
+      \hline
+      Corpus & Features\\
+      \hline\hline
+      AAA & 1M words\\
+      BBB & spoken corpus (expensive)\\
+      CCC & 2M words\\
+        & free (to academics)\\
+      \hline
+
+\end{tabular}
+\caption{The caption of the table}\label{table1}
+ \end{center}
+\end{table}
+
+ (formal) citation styles if you prefer.
+
+
+\subsubsection{GED vs Neighbourhood Search}
+
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+ 
+\subsubsection{GED vs Soundex}
+
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+
+
+\subsubsection{Neighbourhood Search}
+
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+Text of the subsubsection.
+
+
+
+
+
+
+\section{Conclusions}
+
+Include discussion + possible improvements
+Talk about how all of these algorithms are quite naive and do not include any user input, which is quite important in the context of spelling correction (give an example as well as a reference). Some context could be the whole sentence typed by the user - what is grammatically correct? Also use user data to determine which words are more commonly followed by which others.
+
+
+
+
+\end{document}
