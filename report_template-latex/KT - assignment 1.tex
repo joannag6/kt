@@ -9,8 +9,8 @@
 {Anonymous}
 
 
-\bibliographystyle{acl}
-\bibliography{sample}
+%\bibliographystyle{acl}
+%\bibliography{sample}
 
 \begin{document}
 \maketitle
@@ -22,14 +22,19 @@
 
 \section{Introduction}
 
-This report examines a diverse set of spelling correction techniques and compares their respective performances on a particular dataset from UrbanDictionary \cite{JOURNAL:1}.
+This report examines a diverse set of spelling correction techniques and compares their respective performances on a particular dataset from UrbanDictionary %\cite{JOURNAL:1}.
+
+Explain that this is an approximate string matching problem. -- maybe put this in methodology?
 
 - include stats of misspelled words in general 
 - include history of spell checkers / spelling correction 
 
 
 /@@@@@@@@@@@@@@@@@/ -- reword this
-Here, a list of words entries that are ?correct?We can break our input into words substrings that we wish to match, and compare each of them against the entries in the dictionaryA word item in the input which doesn?t appear in the dictionary is misspelledA word item in the input which does appear in the dictionary might be correctly spelled or misspelled (probably slightly beyond the scope of this subject)
+Here, a list of words entries that are ?correct?
+We can break our input into words substrings that we wish to match, and compare each of them against the entries in the dictionary
+A word item in the input which doesn?t appear in the dictionary is misspelled
+A word item in the input which does appear in the dictionary might be correctly spelled or misspelled (probably slightly beyond the scope of this subject)
 /@@@@@@@@@@@@@@@@@/
 
 aims to apply multiple spelling correction methods on a given data set. The methods are then analysed and compared based on their respective performances.
@@ -50,56 +55,48 @@ number of deficient data in dataset: 275 (out of 716) -- 38.4\% of data is ?dirt
 
 
 \section{Methodology}
-Three different approaches were chosen to attempt to solve the problem. /@@@@@/I
+Three different approaches were chosen to attempt to solve the problem. This was done in order to get a broader scope of results and to attempt to incorporate the advantages from each technique into a singular better solution for this problem. /@@@@@/
+
+
 
 \subsection{Global Edit Distance}
-The Needleman-Wunsch Algorithm !!@CITE@!! was used to calculate the Global Edit Distance (GED) between the misspelled word and a word in the given dictionary. This dynamic-programming algorithm was chosen in order to improve the run time complexity of the otherwise lengthy process. It returns the maximum possible "score" which represents the GED between the two words. This score is determined by the chosen parameters. 
+The Needleman-Wunsch Algorithm %\CITE@!!
+was used to calculate the Global Edit Distance (GED) between the misspelled word and a word in the given dictionary. This dynamic-programming algorithm was chosen in order to improve the run time complexity of the otherwise lengthy process. It returns the maximum possible "score" which represents the GED between the two words. This score is determined by the chosen parameters. 
 
 A simple \texttt{Python} script was used to execute the algorithm, calculating the GED between each word in the given file of misspelled words and each word in the dictionary, returning a list of dictionary words with the largest GED from each respective misspelled word.
 
 \subsubsection{Parameters}
-After consideration, the Levenshtein distance !!@CITE@!! with parameters of \((m, i, d, r) = (+1, -1, -1, -1)\) was chosen to be applied in this implementation. With this parameters, strings which are more "similar" have a higher GED score. /// why?
+After consideration, the Levenshtein distance %\CITE@!!
+with parameters of \((m, i, d, r) = (+1, -1, -1, -1)\) was chosen to be applied in this implementation. With this parameters, strings which are more "similar" have a higher GED score. %// why?
 
 \subsubsection{Comparison with Local Edit Distance}
 Local Edit Distance (LED) is a ... used for  more appropriate for substring matching, but due to the nature of this problem, it will not be very effective in getting good solutions.
 
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-
 
 
 \subsection{Neighbourhood Search}
-This search algorithm was implemented with a \texttt{bash} script which utilised the UNIX command-line utility \texttt{agrep} !!@@CITE @@!! due to its impressive efficiency. The code used the \texttt{-\#} flag in the \texttt{agrep} command in order to define the neighbourhood limit, \texttt{k}. \texttt{agrep} was executed on each misspelled word with \texttt{k}-values starting from \texttt{0} and incremented by \texttt{1}, until at least one match from the dictionary (a neighbour) was found.
+\subsubsection{Implementation with agrep}
+This search algorithm was implemented with a \texttt{bash} script which utilised the UNIX command-line utility \texttt{agrep}  %\CITE@!!
+ due to its impressive efficiency. The code used the \texttt{-\#} flag in the \texttt{agrep} command in order to define the neighbourhood limit, \texttt{k}. \texttt{agrep} was executed on each misspelled word with \texttt{k}-values starting from \texttt{0} and incremented by \texttt{1}, until at least one match from the dictionary (a neighbour) was found.
 
 All the matches for that specific misspelled word were then outputted to standard output. This allowed for each misspelled entry to have at least one result without requiring preprocessing to determine the smallest value of \texttt{k} needed to guarantee a match.
 
+%\ write more stuff here???
+
+\subsection{Phonetic Matching}
+%\Given that the problem space involves 
 
 
-\subsection{Soundex}
+\subsubsection{Implementation with Soundex}
+The implementation of the phonetic matching algorithm was a \texttt{Python} program which used Soundex
+%\ODELL,M. K., AND RUSSELL, R.C. U,S. Patent nos. 1,261,167(1918) and 1,435,683 (1922)
+to encode each word in the dictionary into a four-character code. This encoding is meant to be shared amongst "like-sounding" words. %\Hall & Dowling, Approximate String Matching
+The program maps each encoding to the list of words that evaluate to that specific translation. Then, it returns the corresponding list for each given misspelled word. It is possible for an empty list to be returned. Given that all the dictionary information is cached, the overall time complexity is very efficient.
 
+\subsubsection{Truncation}
+Although the truncation of Soundex codes to four characters may not be as useful in an approximate string matching problem as compared to one that required a more exact solution, it was decided keep the truncation in order to retain the simplicity of exact indexing. 
 
-
-\subsubsection{Implementation}
-
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Three main methods chosen,\footnote{Footnote text} with footnotes at bottom of page.
-Text of the subsection with citations such as 
-\newcite{Spa72}, \newcite{Kay86} and \newcite{MosWal64}.
-Note that the citation style is defined in the accompanying
-style file; it is similar to AAAI house style. You may use
-other (formal) citation styles if you prefer.
-Text of the subsubsection.
-Text of the subsubsection (see Table~\ref{table1}).
-
-
+Having to account for "similar" codes will introduce another approximate string matching problem where some technique (eg. edit distance) would be required. Even though it may give a better solution, this could introduce unnecessary complexity instead of solving the actual problem. %cite Zobel?
 
 \section{Evaluation Methods}
 
@@ -107,43 +104,36 @@ Text of the subsubsection (see Table~\ref{table1}).
 
 - explain what it is and what it's good for (with some references)
 
-Text,\footnote{Footnote text} with footnotes at bottom of page.
-Text of the subsection with citations such as 
-\newcite{Spa72}, \newcite{Kay86} and \newcite{MosWal64}.
-Note that the citation style is defined in the accompanying
-style file; it is similar to AAAI house style. You may use
-other (formal) citation styles if you prefer.
-
-
 \subsection{Recall}
 
 - explain what it is and what it's good for (with some references)
 
+\subsection{Results}
+
+Text,\footnote{Footnote text} with footnotes at bottom of page.
 Text of the subsection with citations such as 
-\newcite{Spa72}, \newcite{Kay86} and \newcite{MosWal64}.
+%\newcite{Spa72}, \newcite{Kay86} and \newcite{MosWal64}.
 Note that the citation style is defined in the accompanying
 style file; it is similar to AAAI house style. You may use
 other (formal) citation styles if you prefer.
-
-
-\subsection{Results}
+Text of the (see Table~\ref{table1}).
 
 Text of the subsection with citations such as 
 \begin{table}[h]
  \begin{center}
-\begin{tabular}{|l|l|}
+\begin{tabular}{|c||c|c|c|}
 
-      \hline
-      Corpus & Features\\
-      \hline\hline
-      AAA & 1M words\\
-      BBB & spoken corpus (expensive)\\
-      CCC & 2M words\\
-        & free (to academics)\\
-      \hline
+\hline
+Method & Precision & Recall \\
+\hline\hline
+%\multirow{3}{4em}{Multiple row} & cell2 & cell3 \\ 
+GED & 0.0481378262 & 0.2653631285 \\ 
+agrep & 0.0457670043 & 0.3533519553 \\ 
+Soundex & 0.0029336621 & 0.5949720670 \\
+\hline
 
 \end{tabular}
-\caption{The caption of the table}\label{table1}
+\caption{Results for each method, approximated to 10 decimal places}\label{table1}
  \end{center}
 \end{table}
 
@@ -152,47 +142,11 @@ Text of the subsection with citations such as
 
 \subsubsection{GED vs Neighbourhood Search}
 
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
  
 \subsubsection{GED vs Soundex}
 
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
 
-
-\subsubsection{Neighbourhood Search}
-
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-Text of the subsubsection.
-
-
-
-
+\subsubsection{Neighbourhood Search vs Soundex}
 
 
 \section{Conclusions}
@@ -201,6 +155,7 @@ Include discussion + possible improvements
 Talk about how all of these algorithms are quite naive and do not include any user input, which is quite important in the context of spelling correction (give an example as well as a reference). Some context could be the whole sentence typed by the user - what is grammatically correct? Also use user data to determine which words are more commonly followed by which others.
 
 
+Soundex - use better code values?
 
 
 \end{document}
