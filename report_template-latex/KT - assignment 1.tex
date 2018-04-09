@@ -71,7 +71,7 @@ Three different approximate string matching approaches were used for this proble
 
 \subsection{Global Edit Distance}
 The Needleman-Wunsch Algorithm % CITE@!!
-was used to calculate the Global Edit Distance (GED) between the misspelled word and a word in the given dictionary. It returns the maximum possible "score" which represents the GED between the two words. This score is determined by the chosen parameters. This dynamic-programming algorithm was selected in order to improve the run time complexity of the otherwise lengthy process. Regardless, this program took the longest to execute (i.e., approximately 7 hours for only 716 words).
+was used to calculate the Global Edit Distance (GED) between the misspelled word and a word in the given dictionary. It returns the maximum possible "score" which represents the GED between the two words. This dynamic-programming algorithm was selected in order to improve the run time complexity of the otherwise lengthy process. Regardless, this program took the longest to execute (i.e., approximately 7 hours for only 716 words).
 
 A simple \texttt{Python} script was used to execute the algorithm, calculating the GED between each word in the given file of misspelled words and each word in the dictionary, returning a list of dictionary words with the largest GED from each respective misspelled word.
 
@@ -145,18 +145,19 @@ Thus, precision and recall were more appropriate evaluation metrics since they a
 \subsection{Precision}
 Precision is determined by calculating 
 \begin{equation}\frac{|correct|}{|attempted|}\end{equation}
-where \(correct\) is the correct words the method obtained and \(attempted\) is all of the obtained words. 
+where \(correct\) is the correct words the method obtained and \(attempted\) is all of the obtained words. It is used to determine the "proportion of retrieved records that are relevant". %[SALT68, PAIC77]
 % Perry, Kent & Berry (1955)
 
-Determining the precision is useful because even though a technique may return the correct answer, that solution is useless if many wrong answers are returned as well. It is difficult to discern the actual desired solution from such a large pool.
+%Determining the precision is useful because even though a technique may return the correct answer, that solution is useless if many wrong answers are returned as well. It is difficult to discern the actual desired solution from such a large pool.
+
+A technique that returns not only correct answers, but also many wrong answers is inadequate. It would be difficult to determine an actual relevant solution. Thus, determining precision is more useful in this regard.
 
 \subsection{Recall}
 Recall is determined by calculating 
 \begin{equation}\frac{|correct|}{|total|}\end{equation}
-where \(correct\) is the correct words the method obtained and \(total\) is the misspelled words. 
+where \(correct\) is the correct words the method obtained and \(total\) is the misspelled words. It evaluates the "proportion of relevant records actually retrieved". %[SALT68, PAIC77]
 
-Recall is a method of verifying if a certain method will return the right answer at all. If the precision of a procedure is low but it has a high recall, perhaps additional post processing could help sieve through the results and determine the most relevant one.
-
+Recall is a method of verifying if a list of solutions contains the right answer at all. If the precision of a procedure is low but it has a high recall, perhaps additional post processing could filter through the results and determine the most relevant solution.
 
 \section{Results}
 
@@ -181,13 +182,14 @@ Soundex & 0.0029336621 & 0.5949720670 \\
 \end{table}
 
 \section{Analysis}
+Regardless of which evaluation metric was used, the results imply that more than half of the solutions would be incorrect. This proves unsatisfactory for any real world applications. 
 
-In this study, Soundex obtained the highest recall but the lowest precision out of the three methods. These results seem to indicate high numbers of false positives for Soundex. This may be a consequence of truncating the Soundex codes. % can i include reason in this section???
+%In this study, Soundex obtained the highest recall but the lowest precision out of the three methods. These results seem to indicate high numbers of false positives for Soundex. This may be a consequence of truncating the Soundex codes. % can i include reason in this section???
 
-The method with the highest precision is the Global Edit Distance. Interestingly, it also acquired the lowest recall. This implies that ... %\ why? - implementation
+%The method with the highest precision is the Global Edit Distance. Interestingly, it also acquired the lowest recall. This implies that ... %\ why? - implementation
 
 \subsection{GED vs \texttt{agrep}}
-GED has better precision but not that much better, only approximately \(5.18\%\) better, with respect to agrep's precision. However, the recall of \texttt{agrep} is \(33.16\%\) better (wrt to GED recall), which could significantly affect any dataset. If there exists some algorithm that could help rank the relevance of all the results, it could be quite likely to get the "correct" answer, rendering the difference in precision negligible. % reword
+GED has slightly better precision than \texttt{agrep}, but only by approximately 5.18\%. However, the recall of \texttt{agrep} is \(33.16\%\) better than GED recall, which is a significant difference. If an algorithm that assists in ranking relevance of all results could be applied, it is possible to obtain the "correct" answer, rendering the difference negligible.% reword
  
 % This could affect a large data set -- which is relevant for real world application
 
@@ -195,12 +197,24 @@ GED has better precision but not that much better, only approximately \(5.18\%\)
 % maybe just use a ratio lol
  
 \subsection{GED vs Soundex}
-Eventhough the recall value of Soundex is 2.24 times better than GED, the precision of GED is approximately 16.4 times better than Soundex. This infers that although Soundex would most likely have the correct answer in its list of solutions, if selection of the final answer is random, there is a much lower chance of getting the actual answer than if GED was used. Due to this, unless a sufficiently effective algorithm that could help rank the relevance of all the results is available, the Soundex algorithm is most likely useless for real world application. %reword 
+In this study, Soundex obtained the highest recall but the lowest precision out of the three methods, with a recall value 2.24 times better than that of GED. These results seem to indicate high numbers of false positives for Soundex. This may be a consequence of truncating the Soundex codes.
+On the other hand, the method with the highest precision is GED. It obtained a precision approximately 16.4 times better than Soundex. Interestingly, it also acquired the lowest recall. %\ why? - implementation
+
+Choosing the right algorithm for a problem would require determining a suitable trade-off between precision and recall. In situations where false positives may be tolerated better, Soundex would be the better option. Additional techniques like using a similarity metric could be used to improve the precision of Soundex. % cite Improving Precision and Recall for Soundex Retrieval, David Holmes and M. Catherine McCabe
+However, if there is no reliable way of filtering through the results, GED is more likely to return a correct answer.
 
 \subsection{\texttt{agrep} vs Soundex}
-\texttt{agrep} is also significantly better at precision than Soundex, 15.6 times better. Soundex's recall value is only 1.68 times better than \texttt{agrep}. That would most likely make the most difference in a large dataset, maybe with some extra information that could provide some context to the problem. % reword AF
+\texttt{agrep} is significantly more precise than Soundex (i.e., 15.6 times better). Recall value of Soundex is only 1.68 times better than \texttt{agrep}. 
+
+This infers that even though Soundex is more likely to have the "correct" answer in its list of solutions, there is a much lower chance of obtaining the actual answer compared to using \texttt{agrep}, provided the selection of final answer is randomised. Unless a sufficiently efficient algorithm that could rank the relevance of all results is available, the Soundex algorithm is likely to be least applicable in real world situations.
+
+
+%That would most likely make the most difference in a large dataset, maybe with some extra information that could provide some context to the problem. % reword AF
 
 \section{Conclusions}
+In conclusion,
+
+Given that all three methods do not necessitate any user input, perhaps some modifications could be applied to make these algorithms user-assisted.  
 
 %Include discussion + possible improvements
 %Talk about how all of these algorithms are quite naive and do not include any user input, which is quite important in the context of spelling correction (give an example as well as a reference). Some context could be the whole sentence typed by the user - what is grammatically correct? Also use user data to determine which words are more commonly followed by which others.
