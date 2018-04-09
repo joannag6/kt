@@ -1,5 +1,6 @@
 import argparse
 import ast
+import random
 
 parser = argparse.ArgumentParser()
 parser.add_argument("filename1", help="path of the correct file",
@@ -10,6 +11,7 @@ args = parser.parse_args()
 
 correct = []
 
+total_accuracy = 0
 total_attempts = 0
 total_words = 0
 
@@ -25,6 +27,9 @@ with open(args.filename1, "r") as f1:
             total_words += 1
             if word[:-1] in wordlist: # precision/recall
                 correct.append(word)
+            if word[:-1] in random.sample(wordlist, 1):
+                total_accuracy += 1
 
 print('Precision: ' + str(len(correct)/total_attempts))
 print('Recall: ' + str(len(correct)/total_words))
+print('Accuracy: ' + str(total_accuracy))

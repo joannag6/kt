@@ -4,7 +4,7 @@
 
 
 
-\title{COMP90049 Report}
+\title{COMP90049 Report: Analysis of Spelling Correction Methods}
 \author
 {Anonymous}
 
@@ -23,8 +23,9 @@
 \section{Introduction}
 
 This report examines a diverse set of spelling correction techniques and compares their respective performances on a particular dataset from UrbanDictionary. % \cite{JOURNAL:1}.
-Regardless of whether the spelling mistakes were due to legitimate spelling variations or a simple typo, spelling correction can be treated as an approximate string matching problem. % cite Hall and Dowling
-%Approximate string matching is a common problem with various real world applications. 
+Spelling correction can be treated as an approximate string matching problem. % cite Hall and Dowling
+
+%Regardless of whether the spelling mistakes were due to legitimate spelling variations or a simple typo. %Approximate string matching is a common problem with various real world applications. 
 
 %- include stats of misspelled words in general 
 %- include history of spell checkers / spelling correction 
@@ -32,7 +33,9 @@ Regardless of whether the spelling mistakes were due to legitimate spelling vari
 %aims to apply multiple spelling correction methods on a given data set. The methods are then analysed and compared based on their respective performances.
 
 \section{Dataset}
-The data provided consisted of misspelled words, the correct spellings of the respective words, and a "dictionary" of correctly spelt words. These were identified from UrbanDictionary by Saphra and Lopez (2016). The words were constructed from Latin characters but were not necessarily English words. This dataset has several deficiencies, which could produce false negatives or false positives in the results. For example, "guilford" (a "correct" entry) doesn't appear in dictionary but "guildford" (a "misspelled" entry) does. The following table illustrates these shortcomings:
+The data consisted of misspelled words, the correct spellings of the respective words, and a "dictionary" of correctly spelled words. These words were identified from UrbanDictionary by Saphra and Lopez (2016). The words are formed from Latin characters but are not necessarily English words. 
+
+This dataset has several deficiencies, which could produce false negatives or false positives in the results. For example, "guilford" (a "correct" entry) doesn't appear in dictionary but "guildford" (a "misspelled" entry) does. The following table collates these shortcomings:
 
 
 \begin{table}[h]
@@ -46,11 +49,11 @@ correct entries same as misspelled ones & \textit{9} \\
 \hline
 
 \end{tabular}
-\caption{Deficiencies in the provided dataset}\label{table1}
+\caption{Deficiencies in the provided dataset}\label{deficiencies}
  \end{center}
 \end{table}
 
-Further calculation revealed that 275 (out of 716) words are in some way "deficient". This is close to 38.4\% of the data. Since this is such a high number, some precaution should be taken before making any critical conclusions from this study.
+Further calculation revealed that 275 (out of 716) words are in some way "deficient". This is close to 38.4\% of the data. Since this is such a high percentage, precautions should be taken before making any critical conclusions from this study. % reword
 
 %"a number of headwords taken from UrbanDictionary that have been automatically identified as being misspelled (Saphra and Lopez, 2016)."
 %all the words are "english" and are latin characters. however they are not necessarily English which is why we use the provided dictionary  as reference.
@@ -61,22 +64,23 @@ Further calculation revealed that 275 (out of 716) words are in some way "defici
 % use terms "False positive" and "False negative"
 
 \section{Methodology}
-Three different approaches for approximate string matching were chosen to attempt to solve the problem. This was done in order to get a broader scope of results and to attempt to incorporate the advantages from each technique into a singular better solution for this problem. % reword
+Three different approximate string matching approaches were used for this problem. This was done in order to get a broader scope of results and to appreciate the respective strengths and weaknesses of each technique.
 
+%to incorporate the advantages from each technique into a singular better solution for this problem
 
 
 \subsection{Global Edit Distance}
 The Needleman-Wunsch Algorithm % CITE@!!
-was used to calculate the Global Edit Distance (GED) between the misspelled word and a word in the given dictionary. It returns the maximum possible "score" which represents the GED between the two words. This score is determined by the chosen parameters. This dynamic-programming algorithm was chosen in order to improve the run time complexity of the otherwise lengthy process. Regardless, this program took the longest to execute, around 7 hours for just 715 words. 
+was used to calculate the Global Edit Distance (GED) between the misspelled word and a word in the given dictionary. It returns the maximum possible "score" which represents the GED between the two words. This score is determined by the chosen parameters. This dynamic-programming algorithm was selected in order to improve the run time complexity of the otherwise lengthy process. Regardless, this program took the longest to execute (i.e., approximately 7 hours for only 716 words).
 
 A simple \texttt{Python} script was used to execute the algorithm, calculating the GED between each word in the given file of misspelled words and each word in the dictionary, returning a list of dictionary words with the largest GED from each respective misspelled word.
 
 \subsubsection{Parameters}
-After consideration, the Levenshtein distance % CITE@!!
-with parameters of \((m, i, d, r) = (+1, -1, -1, -1)\) was chosen to be applied in this implementation. With this parameters, strings which are more "similar" have a higher GED score. % why?
+After careful consideration, the parameters \((m, i, d, r) = (+1, -1, -1, -1)\) were chosen over the Levenshtein distance parameters \((m, i, d, r) = (0, -1, -1, -1)\) % CITE@!!
+. With these parameters, the difference between a match and a non-match character is further exaggerated. This could be useful when searching for "similar" strings.
 
-\subsubsection{Comparison with Local Edit Distance}
-Local Edit Distance (LED) is a ... used for  more appropriate for substring matching, but due to the nature of this problem, it will not be very effective in getting good solutions.
+%\subsubsection{Comparison with Local Edit Distance}
+%Local Edit Distance (LED) is a ... used for  more appropriate for substring matching, but due to the nature of this problem, it will not be very effective in getting good solutions.
 
 
 
@@ -92,52 +96,71 @@ All the matches for that specific misspelled word were then outputted to standar
 \subsection{Phonetic Matching}
 % Given that the problem space involves 
 
-
 \subsubsection{Implementation with Soundex}
-The implementation of the phonetic matching algorithm was a \texttt{Python} program which used Soundex
-% ODELL,M. K., AND RUSSELL, R.C. U,S. Patent nos. 1,261,167(1918) and 1,435,683 (1922)
+The phonetic matching algorithm was implemented with a \texttt{Python} program, which utilized Soundex % ODELL,M. K., AND RUSSELL, R.C. U,S. Patent nos. 1,261,167(1918) and 1,435,683 (1922)
 to encode each word in the dictionary into a four-character code. This encoding is meant to be shared amongst "like-sounding" words. % Hall & Dowling, Approximate String Matching
-The program maps each encoding to the list of words that evaluate to that specific translation. Then, it returns the corresponding list for each given misspelled word. It is possible for an empty list to be returned. Given that all the dictionary information is cached, the overall time complexity is very efficient.
+The program maps each encoding to the list of words that translate to it. Then, the corresponding list for each given misspelled word is returned. It is possible for an empty list to be returned. Given that all the dictionary information is cached, the overall time complexity is very efficient.
 
 \subsubsection{Truncation}
-Although the truncation of Soundex codes to four characters may not be as useful in an approximate string matching problem as compared to one that required a more exact solution, it was decided keep the truncation in order to retain the simplicity of exact indexing. 
+It was decided that the truncation of Soundex codes to four characters should be kept in order to retain the simplicity of exact indexing. Having to account for "similar" codes introduces another approximate string matching problem where additional techniques (eg. edit distance) would be required. Even though it may give a better solution, this could introduce unnecessary complexity instead. % cite Zobel?
 
-Having to account for "similar" codes will introduce another approximate string matching problem where some technique (eg. edit distance) would be required. Even though it may give a better solution, this could introduce unnecessary complexity instead of solving the actual problem. % cite Zobel?
 
-\section{Evaluation Metrics}  % reword this whole thing
-Precision and recall seemed more appropriate evaluation metrics than accuracy since all the algorithms returned a list of solutions as opposed to a single answer.  
 
-Also calculated the accuracy for each algorithm, where the chosen word is a random answer from the list of answers.Values were like -- insert table --, which is -- insert percentage --, which is quite low. Because it is quite low and the random picking of answers is not very reliable, decided to return a list instead and do analysis on that. In that case, less unaccountable variation in the results.
+\section{Evaluation Metrics} 
+In the initial stages of the project, all methods returned a single answer chosen at random from the pool of appropriate solutions. This was repeated 10 times and the accuracy for each run was calculated. (see Table~\ref{accuracies}).
+
+\begin{table}[hb]
+\begin{center}
+\begin{tabular}{|c|ccc|}
+
+\hline
+\# & GED & \texttt{agrep} & Soundex  \\ 
+ \hline
+
+1 & 85 & 110 & 2  \\ 
+2 & 80 & 105 & 3 \\ 
+3 & 89 & 115 & 3 \\
+4 & 83 & 107 & 4 \\ 
+5 & 84 & 118 & 6 \\
+6 & 79 & 106 & 4 \\
+7 & 87 & 102 & 4 \\
+8 & 83 & 109 & 7 \\
+9 & 84 & 110 & 2 \\
+10 & 85 & 109 & 4 \\
+
+\hline
+Average & 83.9 & 109.1 & 3.9 \\
+\hline
+\end{tabular}
+\caption{Accuracies of each method over 10 runs}\label{accuracies}
+ \end{center}
+\end{table}
+
+Due to the low accuracy results (only 0.5\% - 15.2\% of the total words) and consistent presence of random factor(s), it was difficult to reliably compare the respective algorithms based on accuracy.
+
+Thus, precision and recall were more appropriate evaluation metrics since they are designed to work on lists of results rather than just one. The algorithms were then amended accordingly. This reduced the unaccountable variation in results. % english this right
+
+%Also calculated the accuracy for each algorithm, where the chosen word is a random answer from the list of answers.Values were like -- insert table --, which is -- insert percentage --, which is quite low. Because it is quite low and the random picking of answers is not very reliable, decided to return a list instead and do analysis on that. In that case,
 
 \subsection{Precision}
 Precision is determined by calculating 
 \begin{equation}\frac{|correct|}{|attempted|}\end{equation}
-where \(correct\) is all the correct words the method derived and \(attempted\) is all of the derived words. 
+where \(correct\) is the correct words the method obtained and \(attempted\) is all of the obtained words. 
 % Perry, Kent & Berry (1955)
 
-Determining the precision is useful because even though a technique may return the correct answer, that solution is useless if many other wrong answers are returned as well. It would be quite difficult to discern the actual desired solution from such a large pool.
-
-In this study, the method with the highest precision is the Global Edit Distance. This makes sense because 
-% somethingsdagmas,d. --  go into the implementation
-
-On the other hand, Soundex obtained the lowest precision out of the three. %\why? - implementation
+Determining the precision is useful because even though a technique may return the correct answer, that solution is useless if many wrong answers are returned as well. It is difficult to discern the actual desired solution from such a large pool.
 
 \subsection{Recall}
 Recall is determined by calculating 
 \begin{equation}\frac{|correct|}{|total|}\end{equation}
-where \(correct\) is all the correct words the method derived and \(total\) is the misspelled words. 
+where \(correct\) is the correct words the method obtained and \(total\) is the misspelled words. 
 
-Recall is a method way of verifying if a certain method will return the right answer at all. If the precision of a procedure is low, but it has a high recall, perhaps additional post processing could help sieve through the results and determine the most relevant one. 
+Recall is a method of verifying if a certain method will return the right answer at all. If the precision of a procedure is low but it has a high recall, perhaps additional post processing could help sieve through the results and determine the most relevant one.
 
-
-Amongst the three techniques covered in this report, Soundex had with the highest recall. This may be because 
-% somethingsdagmas,d. --  go into the implementation
-
-Interestingly, the lowest recall was acquired by Global Edit Distance. %\ why? - implementation
 
 \section{Results}
 
-A \texttt{Python} script was written to calculate the precision and recall of each of the approximate string matching methods.
+A \texttt{Python} script was written to calculate the precision and recall of each approximate string matching method.
 
 \begin{table}[h]
  \begin{center}
@@ -153,9 +176,15 @@ Soundex & 0.0029336621 & 0.5949720670 \\
 \hline
 
 \end{tabular}
-\caption{Results for each method, approximated to 10 decimal places}\label{table1}
+\caption{Results for each method, approximated to 10 decimal places}\label{results}
  \end{center}
 \end{table}
+
+\section{Analysis}
+
+In this study, Soundex obtained the highest recall but the lowest precision out of the three methods. These results seem to indicate high numbers of false positives for Soundex. This may be a consequence of truncating the Soundex codes. % can i include reason in this section???
+
+The method with the highest precision is the Global Edit Distance. Interestingly, it also acquired the lowest recall. This implies that ... %\ why? - implementation
 
 \subsection{GED vs \texttt{agrep}}
 GED has better precision but not that much better, only approximately \(5.18\%\) better, with respect to agrep's precision. However, the recall of \texttt{agrep} is \(33.16\%\) better (wrt to GED recall), which could significantly affect any dataset. If there exists some algorithm that could help rank the relevance of all the results, it could be quite likely to get the "correct" answer, rendering the difference in precision negligible. % reword
@@ -173,21 +202,15 @@ Eventhough the recall value of Soundex is 2.24 times better than GED, the precis
 
 \section{Conclusions}
 
-Include discussion + possible improvements
-Talk about how all of these algorithms are quite naive and do not include any user input, which is quite important in the context of spelling correction (give an example as well as a reference). Some context could be the whole sentence typed by the user - what is grammatically correct? Also use user data to determine which words are more commonly followed by which others.
+%Include discussion + possible improvements
+%Talk about how all of these algorithms are quite naive and do not include any user input, which is quite important in the context of spelling correction (give an example as well as a reference). Some context could be the whole sentence typed by the user - what is grammatically correct? Also use user data to determine which words are more commonly followed by which others.
 
 
-Text,\footnote{some Footnote text} with footnotes at bottom of page.
-Text of the subsection with citations such as 
-%\newcite{Spa72}, \newcite{Kay86} and \newcite{MosWal64}.
-Note that the citation style is defined in the accompanying
-style file; it is similar to AAAI house style. You may use
-other (formal) citation styles if you prefer.
-Text of the (see Table~\ref{table1}).
+%Text,\footnote{some Footnote text} with footnotes at bottom of page. Text of the subsection with citations such as \newcite{Spa72}, \newcite{Kay86} and \newcite{MosWal64}. Note that the citation style is defined in the accompanying style file; it is similar to AAAI house style. You may use other (formal) citation styles if you prefer. Text of the (see Table~\ref{results}).
 
 
-Soundex - use better code values?
-agrep is a nice middle ground thing
+%Soundex - use better code values?
+%agrep is a nice middle ground thing
 
 
 \end{document}

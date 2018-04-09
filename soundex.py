@@ -1,3 +1,4 @@
+import random
 from collections import defaultdict
 # aehiouwy →    0 (vowels)
 # bpfv     →    1 (labials)
@@ -39,10 +40,14 @@ def soundex(word):
     return final.ljust(4,'0')[:4]
 
 with open("./data/dictionary.txt", "r") as f:
-    dictionary = defaultdict(list)
+    dictionary = defaultdict(set)
     for item in f:
-        dictionary[soundex(item[:-1])].append(item[:-1])
+        dictionary[soundex(item[:-1])].add(item[:-1])
 
 with open("./data/misspell.txt", "r") as f:
     for word in f:
-        print(dictionary[soundex(word[:-1])])
+        lst = dictionary[soundex(word[:-1])]
+        if lst:
+            print(random.sample(lst, 1)[0])
+        else:
+            print(" ")
